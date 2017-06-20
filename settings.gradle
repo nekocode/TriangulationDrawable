@@ -1,1 +1,1 @@
-include ':app', ':lib-triangulation'
+include ':example', ':lib-triangulation'
