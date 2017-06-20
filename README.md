@@ -3,7 +3,7 @@
 
 Ported from [SVG triangulation](https://codepen.io/zessx/pen/ZGBMXZ).
 
-<img src="https://github.com/nekocode/TriangulationDrawable/blob/master/img/screenshot.webp" width="360px">
+![Screenshot](img/screenshot.gif)
 
 
 ## Getting started
