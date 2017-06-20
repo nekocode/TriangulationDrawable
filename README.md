@@ -1,7 +1,7 @@
 # Triangulation Drawable
 [![Apache 2.0 License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0.html) [![Release](https://jitpack.io/v/nekocode/TriangulationDrawable.svg)](https://jitpack.io/#nekocode/TriangulationDrawable)
 
-The code of triangulation animation is portted from the **[SVG triangulation (JavaScript)](https://codepen.io/zessx/pen/ZGBMXZ)**.
+The code of triangulation animation is ported from the **[SVG triangulation (JavaScript)](https://codepen.io/zessx/pen/ZGBMXZ)**.
 
 ![Screenshot](img/screenshot.gif)
 
