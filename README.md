@@ -18,3 +18,16 @@ dependencies {
     compile "com.github.nekocode.TriangulationDrawable:${lastest-version}"
 }
 ```
+
+Obtain an `TriangulationDrawable` with the bacground color parameter.
+
+```java
+final TriangulationDrawable drawable = new TriangulationDrawable(0xFFEF0E39);
+findViewById(android.R.id.content).setBackground(drawable);
+```
+
+And then call the `start()` method for starting the triangulation animation.
+
+```java
+drawable.start()
+```
