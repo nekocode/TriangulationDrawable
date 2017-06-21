@@ -49,8 +49,8 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
     private int alpha = 0xFF;
     private int numPointsX;
     private int numPointsY;
-    private int unitWidth;
-    private int unitHeight;
+    private float unitWidth;
+    private float unitHeight;
     private Point[] points;
     private ArrayList<Polygon> polygons;
 
@@ -126,17 +126,20 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
         width = _width;
         height = _height;
 
-        final int unitSize = (width + height) / 20;
-        numPointsX = (int) (Math.ceil(width / unitSize) + 1);
-        numPointsY = (int) (Math.ceil(height / unitSize) + 1);
-        unitWidth = (int) Math.ceil(width / (numPointsX - 1));
-        unitHeight = (int) Math.ceil(height / (numPointsY - 1));
+        final float unitSize = (width + height) / 20f;
+        numPointsX = (int) (Math.ceil(width / unitSize)) + 1;
+        numPointsY = (int) (Math.ceil(height / unitSize)) + 1;
+        unitWidth = width / (numPointsX - 1f);
+        unitHeight = height / (numPointsY - 1f);
 
         points = new Point[numPointsY * numPointsX];
         for (int y = 0; y < numPointsY; y++) {
             for (int x = 0; x < numPointsX; x++) {
                 points[x + y * numPointsX] =
-                        new Point(unitWidth * x, unitHeight * y, unitWidth * x, unitHeight * y);
+                        new Point(
+                                unitWidth * x, unitHeight * y, unitWidth * x, unitHeight * y,
+                                x == 0 || x == (numPointsX - 1), y == 0 || y == (numPointsY - 1)
+                        );
             }
         }
 
@@ -155,7 +158,7 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
                 final float bottomRightX = points[i + numPointsX + 1].x;
                 final float bottomRightY = points[i + numPointsX + 1].y;
 
-                final int rando = (int) Math.floor(Math.random() * 2);
+                final int rando = (int) Math.floor(Math.random() * 2.0);
 
                 for (int n = 0; n < 2; n++) {
                     final Polygon polygon = new Polygon();
@@ -204,7 +207,7 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
                             };
                         }
                     }
-                    polygon.alpha = (float) (Math.random() / 3);
+                    polygon.alpha = (float) (Math.random() / 3f);
 
                     polygons.add(polygon);
                 }
@@ -217,11 +220,12 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
 
     private void randomize() {
         for (int i = 0; i < points.length; i++) {
-            if (points[i].originX != 0 && points[i].originX != unitWidth * (numPointsX - 1)) {
-                points[i].x = (float) (points[i].originX + Math.random() * unitWidth - unitWidth / 2);
+            if (!points[i].isInXBounds) {
+                points[i].x = (float) (points[i].originX + Math.random() * unitWidth - unitWidth / 2f);
             }
-            if (points[i].originY != 0 && points[i].originY != unitHeight * (numPointsY - 1)) {
-                points[i].y = (float) (points[i].originY + Math.random() * unitHeight - unitHeight / 2);
+
+            if (!points[i].isInYBounds) {
+                points[i].y = (float) (points[i].originY + Math.random() * unitHeight - unitHeight / 2f);
             }
         }
     }
@@ -274,12 +278,16 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
         private float y;
         private float originX;
         private float originY;
+        private boolean isInXBounds;
+        private boolean isInYBounds;
 
-        Point(float x, float y, float originX, float originY) {
+        Point(float x, float y, float originX, float originY, boolean isInXBounds, boolean isInYBounds) {
             this.x = x;
             this.y = y;
             this.originX = originX;
             this.originY = originY;
+            this.isInXBounds = isInXBounds;
+            this.isInYBounds = isInYBounds;
         }
     }
 
