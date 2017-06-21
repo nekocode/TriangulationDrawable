@@ -21,6 +21,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
@@ -63,7 +64,7 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
         paint.setAntiAlias(true);
     }
 
-    private void drawPolygons(@NonNull Canvas canvas) {
+    private void drawPolygons(@NonNull Canvas canvas, @NonNull Rect bounds) {
         if (isRunning()) {
             loopPercent = (AnimationUtils.currentAnimationTimeMillis() - startTicks) / LOOP_DURANTION;
             while (loopPercent > 1) {
@@ -93,9 +94,9 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
             final float y3 = polygon.points[5] * (1f - loopPercent) + points[polygon.point3].y * (loopPercent);
 
             path.reset();
-            path.moveTo(x1, y1);
-            path.lineTo(x2, y2);
-            path.lineTo(x3, y3);
+            path.moveTo(bounds.left + x1, bounds.top + y1);
+            path.lineTo(bounds.left + x2, bounds.top + y2);
+            path.lineTo(bounds.left + x3, bounds.top + y3);
             path.close();
             paint.setColor(0xFF000000);
             paint.setAlpha((int) (polygon.alpha * alpha));
@@ -105,18 +106,25 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
 
     @Override
     public void draw(@NonNull Canvas canvas) {
-        canvas.drawColor(((backgroundColor & 0x00FFFFFF) + (alpha << 24)));
+        final Rect bounds = getBounds();
+        final int _width = bounds.right - bounds.left;
+        final int _height = bounds.bottom - bounds.top;
 
-        if (canvas.getWidth() == width && canvas.getHeight() == height) {
-            drawPolygons(canvas);
+        // Draw Background
+        paint.setColor(backgroundColor);
+        paint.setAlpha(alpha);
+        canvas.drawRect(bounds.left, bounds.top, bounds.right, bounds.bottom, paint);
+
+        if (_width == width && _height == height) {
+            drawPolygons(canvas, bounds);
             return;
         }
 
         /*
           When canvas resized
          */
-        width = canvas.getWidth();
-        height = canvas.getHeight();
+        width = _width;
+        height = _height;
 
         final int unitSize = (width + height) / 20;
         numPointsX = (int) (Math.ceil(width / unitSize) + 1);
@@ -204,7 +212,7 @@ public class TriangulationDrawable extends Drawable implements Animatable, Runna
         }
 
         randomize();
-        drawPolygons(canvas);
+        drawPolygons(canvas, bounds);
     }
 
     private void randomize() {
