@@ -17,7 +17,7 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    compile "com.github.nekocode.TriangulationDrawable:${lastest-version}"
+    compile "com.github.nekocode:TriangulationDrawable:${lastest-version}"
 }
 ```
 
